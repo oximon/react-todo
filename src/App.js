@@ -1,47 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { observer } from 'mobx-react-lite';
 import TodoItem from './components/TodoItem';
-import './styles/main.css';
 import AddField from './components/AddField';
+import Todo from './store/Todo';
+import './styles/main.css';
 
-function App() {
-  const [tasks, setTasks] = useState([
-    {
-      text: 'Изучить ReactJS',
-      completed: true,
-    },
-    {
-      text: 'Сделать ToDo',
-      completed: true,
-    },
-  ]);
-
+const App = observer(() => {
   const onToggleCompleted = (index) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task, curIdx) =>
-        index === curIdx
-          ? {
-              ...task,
-              completed: !task.completed,
-            }
-          : task
-      )
-    );
+    Todo.toggleComplte(index);
   };
 
   const onRemoveTask = (index) => {
-    setTasks((prevTasks) =>
-      prevTasks.filter((_, curIndex) => index !== curIndex)
-    );
+    Todo.removeTask(index);
   };
 
   const onAddTask = (text) => {
-    setTasks((prevTasks) => [
-      ...prevTasks,
-      {
-        text,
-        completed: false,
-      },
-    ]);
+    Todo.addTask(text);
   };
 
   return (
@@ -51,7 +25,7 @@ function App() {
       </div>
       <AddField onAddTask={onAddTask} />
       <div className='todo__list'>
-        {tasks.map((task, index) => {
+        {Todo.tasks.map((task, index) => {
           return (
             <TodoItem
               text={task.text}
@@ -66,6 +40,6 @@ function App() {
       </div>
     </div>
   );
-}
+});
 
 export default App;
